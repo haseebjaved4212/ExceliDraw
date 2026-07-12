@@ -1,0 +1,244 @@
+import { state } from './scene.js';
+import * as toolManager from './toolManager.js';
+import { getStroke } from 'perfect-freehand';
+
+function getSvgPathFromStroke(stroke) {
+  if (!stroke.length) return '';
+
+  const d = stroke.reduce(
+    (acc, [x0, y0], i, arr) => {
+      const [x1, y1] = arr[(i + 1) % arr.length];
+      acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+      return acc;
+    },
+    ['M', ...stroke[0], 'Q']
+  );
+
+  d.push('Z');
+  return d.join(' ');
+}
+
+let canvas;
+let ctx;
+let dpr = window.devicePixelRatio || 1;
+
+export function initCanvas(canvasElement) {
+  canvas = canvasElement;
+  ctx = canvas.getContext('2d');
+  
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  
+  setupEvents();
+  
+  render();
+}
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = `${rect.width}px`;
+  canvas.style.height = `${rect.height}px`;
+  render();
+}
+
+export function screenToCanvas(clientX, clientY) {
+  return {
+    x: (clientX - state.appState.scrollX) / state.appState.zoom,
+    y: (clientY - state.appState.scrollY) / state.appState.zoom
+  };
+}
+
+export function canvasToScreen(canvasX, canvasY) {
+  return {
+    x: canvasX * state.appState.zoom + state.appState.scrollX,
+    y: canvasY * state.appState.zoom + state.appState.scrollY
+  };
+}
+
+function setupEvents() {
+  let isPanning = false;
+  let startX = 0;
+  let startY = 0;
+  let isSpacePressed = false;
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && !isSpacePressed) {
+      isSpacePressed = true;
+      canvas.style.cursor = 'grab';
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') {
+      isSpacePressed = false;
+      canvas.style.cursor = isPanning ? 'grabbing' : 'default';
+    }
+  });
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (e.button === 1 || (e.button === 0 && isSpacePressed)) {
+      isPanning = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      canvas.style.cursor = 'grabbing';
+      e.preventDefault();
+      return;
+    }
+    
+    if (e.button === 0) {
+      toolManager.handlePointerDown(e, screenToCanvas(e.clientX, e.clientY));
+      // Capture pointer so we get move events outside canvas
+      canvas.setPointerCapture(e.pointerId);
+    }
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (isPanning) {
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      state.appState.scrollX += dx;
+      state.appState.scrollY += dy;
+      startX = e.clientX;
+      startY = e.clientY;
+      render();
+      return;
+    }
+    
+    toolManager.handlePointerMove(e, screenToCanvas(e.clientX, e.clientY));
+  });
+
+  window.addEventListener('pointerup', (e) => {
+    if (isPanning) {
+      if (e.button === 1 || (e.button === 0 && isSpacePressed)) {
+        isPanning = false;
+        canvas.style.cursor = isSpacePressed ? 'grab' : 'default';
+      }
+      return;
+    }
+    
+    toolManager.handlePointerUp(e, screenToCanvas(e.clientX, e.clientY));
+    if (canvas.hasPointerCapture(e.pointerId)) {
+      canvas.releasePointerCapture(e.pointerId);
+    }
+  });
+
+  // Wheel zoom / pan
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+
+    if (e.ctrlKey || e.metaKey) {
+      // Zoom
+      const zoomStep = 0.01;
+      const delta = -e.deltaY;
+      const zoomMultiplier = Math.exp(delta * zoomStep);
+      
+      const prevZoom = state.appState.zoom;
+      let newZoom = prevZoom * zoomMultiplier;
+      newZoom = Math.min(Math.max(newZoom, 0.1), 10);
+      
+      const pointerX = e.clientX;
+      const pointerY = e.clientY;
+      
+      const zoomRatio = newZoom / prevZoom;
+      state.appState.scrollX = pointerX - (pointerX - state.appState.scrollX) * zoomRatio;
+      state.appState.scrollY = pointerY - (pointerY - state.appState.scrollY) * zoomRatio;
+      
+      state.appState.zoom = newZoom;
+    } else {
+      // Pan
+      state.appState.scrollX -= e.deltaX;
+      state.appState.scrollY -= e.deltaY;
+    }
+    render();
+  }, { passive: false });
+}
+
+export function render() {
+  if (!ctx) return;
+  
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.scale(dpr, dpr);
+  ctx.translate(state.appState.scrollX, state.appState.scrollY);
+  ctx.scale(state.appState.zoom, state.appState.zoom);
+  
+  for (const element of state.elements) {
+    renderElement(ctx, element);
+  }
+  
+  ctx.restore();
+}
+
+export function renderElement(ctx, element) {
+  ctx.save();
+  
+  if (element.type === 'freedraw') {
+    const stroke = getStroke(element.points, {
+      size: element.strokeWidth * 2,
+      thinning: 0.5,
+      smoothing: 0.5,
+      streamline: 0.5
+    });
+    const pathData = getSvgPathFromStroke(stroke);
+    const path = new Path2D(pathData);
+    ctx.fillStyle = element.strokeColor;
+    ctx.fill(path);
+    ctx.restore();
+    return;
+  }
+
+  ctx.fillStyle = element.fillStyle || 'transparent';
+  ctx.strokeStyle = element.strokeColor || 'black';
+  ctx.lineWidth = element.strokeWidth || 1;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+
+  ctx.beginPath();
+  
+  if (element.type === 'rectangle') {
+    ctx.rect(element.x, element.y, element.width, element.height);
+  } else if (element.type === 'ellipse') {
+    const cx = element.x + element.width / 2;
+    const cy = element.y + element.height / 2;
+    ctx.ellipse(cx, cy, Math.abs(element.width / 2), Math.abs(element.height / 2), 0, 0, 2 * Math.PI);
+  } else if (element.type === 'diamond') {
+    ctx.moveTo(element.x + element.width / 2, element.y);
+    ctx.lineTo(element.x + element.width, element.y + element.height / 2);
+    ctx.lineTo(element.x + element.width / 2, element.y + element.height);
+    ctx.lineTo(element.x, element.y + element.height / 2);
+    ctx.closePath();
+  } else if (element.type === 'line' || element.type === 'arrow') {
+    ctx.moveTo(element.x, element.y);
+    ctx.lineTo(element.x + element.width, element.y + element.height);
+  }
+
+  if (element.fillStyle !== 'transparent' && ['rectangle', 'ellipse', 'diamond'].includes(element.type)) {
+    ctx.fill();
+  }
+  ctx.stroke();
+
+  // Draw arrowhead if arrow
+  if (element.type === 'arrow') {
+    const x1 = element.x;
+    const y1 = element.y;
+    const x2 = element.x + element.width;
+    const y2 = element.y + element.height;
+    
+    // Calculate angle of line
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const headLen = 15;
+    
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}

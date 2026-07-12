@@ -1,0 +1,45 @@
+import { state, updateAppState } from '../core/scene.js';
+
+export function initToolbar() {
+  const toolbar = document.getElementById('toolbar');
+  const buttons = toolbar.querySelectorAll('button');
+
+  toolbar.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      const tool = e.target.getAttribute('data-tool');
+      updateAppState({ activeTool: tool });
+      
+      buttons.forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+    }
+  });
+
+  // Handle keyboard shortcuts
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    let tool = null;
+    switch (e.key.toLowerCase()) {
+      case 'v':
+      case '1': tool = 'select'; break;
+      case 'r': tool = 'rectangle'; break;
+      case 'o': tool = 'ellipse'; break;
+      case 'd': tool = 'diamond'; break;
+      case 'a': tool = 'arrow'; break;
+      case 'l': tool = 'line'; break;
+      case 'p': tool = 'pen'; break;
+      case 'e': tool = 'eraser'; break;
+    }
+
+    if (tool) {
+      updateAppState({ activeTool: tool });
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-tool') === tool) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+  });
+}
