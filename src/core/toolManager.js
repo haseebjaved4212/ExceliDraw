@@ -6,6 +6,7 @@ import * as arrowTool from '../tools/arrow.js';
 import * as lineTool from '../tools/line.js';
 import * as penTool from '../tools/freedraw.js';
 import * as laserTool from '../tools/laser.js';
+import * as eraserTool from '../tools/eraser.js';
 
 const tools = {
   rectangle: rectangleTool,
@@ -14,7 +15,8 @@ const tools = {
   arrow: arrowTool,
   line: lineTool,
   pen: penTool,
-  laser: laserTool
+  laser: laserTool,
+  eraser: eraserTool
 };
 
 export function handlePointerDown(e, canvasCoords) {
