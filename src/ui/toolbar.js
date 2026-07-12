@@ -5,12 +5,13 @@ export function initToolbar() {
   const buttons = toolbar.querySelectorAll('button');
 
   toolbar.addEventListener('click', (e) => {
-    if (e.target.tagName === 'BUTTON') {
-      const tool = e.target.getAttribute('data-tool');
+    const btn = e.target.closest('button');
+    if (btn) {
+      const tool = btn.getAttribute('data-tool');
       updateAppState({ activeTool: tool });
       
-      buttons.forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
   });
 
