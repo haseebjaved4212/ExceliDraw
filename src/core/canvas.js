@@ -160,7 +160,8 @@ export function render() {
   
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = state.appState.theme === 'dark' ? '#121212' : '#f8f9fa';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   
   ctx.scale(dpr, dpr);
   ctx.translate(state.appState.scrollX, state.appState.scrollY);
@@ -225,6 +226,14 @@ function renderLoop() {
 export function renderElement(ctx, element) {
   ctx.save();
   
+  let strokeColor = element.strokeColor || 'black';
+  let fillStyle = element.fillStyle || 'transparent';
+
+  if (state.appState.theme === 'dark') {
+    if (strokeColor === '#1e1e1e') strokeColor = '#e9ecef';
+    if (fillStyle === '#1e1e1e') fillStyle = '#e9ecef';
+  }
+  
   if (element.type === 'freedraw') {
     const stroke = getStroke(element.points, {
       size: element.strokeWidth * 2,
@@ -234,14 +243,14 @@ export function renderElement(ctx, element) {
     });
     const pathData = getSvgPathFromStroke(stroke);
     const path = new Path2D(pathData);
-    ctx.fillStyle = element.strokeColor;
+    ctx.fillStyle = strokeColor;
     ctx.fill(path);
     ctx.restore();
     return;
   }
 
-  ctx.fillStyle = element.fillStyle || 'transparent';
-  ctx.strokeStyle = element.strokeColor || 'black';
+  ctx.fillStyle = fillStyle;
+  ctx.strokeStyle = strokeColor;
   ctx.lineWidth = element.strokeWidth || 1;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';

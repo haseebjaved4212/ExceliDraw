@@ -5,6 +5,7 @@ import { initToolbar } from './ui/toolbar.js';
 import { initStylePanel } from './ui/stylePanel.js';
 import { initExport } from './features/export.js';
 import { initImport } from './features/import.js';
+import { initTheme } from './ui/theme.js';
 
 const canvasElement = document.getElementById('canvas');
 initCanvas(canvasElement);
@@ -13,3 +14,4 @@ initToolbar();
 initStylePanel();
 initExport();
 initImport();
+initTheme();

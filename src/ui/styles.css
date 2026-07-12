@@ -1,3 +1,29 @@
+:root {
+  --bg-color: #f8f9fa;
+  --panel-bg: #ffffff;
+  --text-color: #333333;
+  --border-color: #dddddd;
+  --icon-color: #333333;
+  --hover-bg: #f1f3f5;
+  --active-bg: #e0eaff;
+  --active-border: #a5b4fc;
+  --active-text: #3730a3;
+  --shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --panel-bg: #232329;
+  --text-color: #e9ecef;
+  --border-color: #363636;
+  --icon-color: #e9ecef;
+  --hover-bg: #2c2c35;
+  --active-bg: #3730a3;
+  --active-border: #4c6ef5;
+  --active-text: #e0eaff;
+  --shadow: 0 4px 6px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,8 +35,8 @@ body, html {
   height: 100%;
   overflow: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 #app {
@@ -38,9 +64,9 @@ canvas {
 
 .panel {
   pointer-events: auto;
-  background: white;
+  background: var(--panel-bg);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow);
   padding: 8px;
 }
 
@@ -54,8 +80,9 @@ canvas {
 }
 
 #toolbar button {
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  color: var(--icon-color);
   padding: 6px;
   border-radius: 4px;
   cursor: pointer;
@@ -65,13 +92,13 @@ canvas {
 }
 
 #toolbar button:hover {
-  background: #f1f3f5;
+  background: var(--hover-bg);
 }
 
 #toolbar button.active {
-  background: #e0eaff;
-  border-color: #a5b4fc;
-  color: #3730a3;
+  background: var(--active-bg);
+  border-color: var(--active-border);
+  color: var(--active-text);
 }
 
 #style-panel {
@@ -98,7 +125,8 @@ canvas {
 .style-title {
   font-size: 11px;
   text-transform: uppercase;
-  color: #666;
+  color: var(--text-color);
+  opacity: 0.8;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
@@ -158,14 +186,18 @@ canvas {
 }
 
 #actions-panel button {
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #actions-panel button:hover {
-  background: #f1f3f5;
+  background: var(--hover-bg);
 }

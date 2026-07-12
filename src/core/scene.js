@@ -8,7 +8,8 @@ export const state = {
     activeTool: 'select',
     selectedElementIds: [],
     currentColor: '#1e1e1e',
-    currentFill: 'transparent'
+    currentFill: 'transparent',
+    theme: 'light'
   }
 };
 
