@@ -1,5 +1,6 @@
 import { state, updateAppState } from '../core/scene.js';
 import { getBoundingBox, isPointInElement, rotatePoint } from '../utils/geometry.js';
+import { commitToHistory } from '../core/history.js';
 
 let mode = 'none'; // 'none', 'move', 'resize', 'rotate'
 let targetId = null;
@@ -144,6 +145,9 @@ export function onPointerMove(e, canvasCoords) {
 }
 
 export function onPointerUp(e, canvasCoords) {
+  if (mode !== 'none' && mode !== 'marquee') {
+    commitToHistory();
+  }
   mode = 'none';
   targetId = null;
   targetHandle = null;

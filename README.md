@@ -1,4 +1,4 @@
-#  Whiteboard App 🎨
+#  Whiteboard App 
 
 A lightweight, high-performance, infinite canvas drawing application built entirely from scratch with **Vanilla JavaScript**, **HTML5 Canvas**, and **Vite**. Inspired by Excalidraw, this project demonstrates how to build a complex state-driven rendering loop without heavy frontend frameworks.
 

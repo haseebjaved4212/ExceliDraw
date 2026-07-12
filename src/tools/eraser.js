@@ -1,4 +1,5 @@
 import { state, updateAppState } from '../core/scene.js';
+import { commitToHistory } from '../core/history.js';
 
 let isErasing = false;
 
@@ -47,5 +48,8 @@ export function onPointerMove(e, canvasCoords) {
 }
 
 export function onPointerUp(e, canvasCoords) {
+  if (isErasing) {
+    commitToHistory();
+  }
   isErasing = false;
 }

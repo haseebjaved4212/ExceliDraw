@@ -1,4 +1,5 @@
-import { addElement, updateElement, updateAppState, state } from '../core/scene.js';
+import { addElement, updateElement, state } from '../core/scene.js';
+import { commitToHistory } from '../core/history.js';
 
 let currentElementId = null;
 let startX = 0;
@@ -40,5 +41,6 @@ export function onPointerMove(e, canvasCoords) {
 export function onPointerUp(e, canvasCoords) {
   if (!currentElementId) return;
   
+  commitToHistory();
   currentElementId = null;
 }
