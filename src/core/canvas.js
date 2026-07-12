@@ -1,6 +1,7 @@
 import { state } from './scene.js';
 import * as toolManager from './toolManager.js';
 import { getStroke } from 'perfect-freehand';
+import { getBoundingBox } from '../utils/geometry.js';
 
 function getSvgPathFromStroke(stroke) {
   if (!stroke.length) return '';
@@ -227,6 +228,15 @@ function renderLoop() {
 export function renderElement(ctx, element) {
   ctx.save();
   
+  const box = getBoundingBox(element);
+  if (element.angle) {
+    const cx = box.x + box.width / 2;
+    const cy = box.y + box.height / 2;
+    ctx.translate(cx, cy);
+    ctx.rotate(element.angle);
+    ctx.translate(-cx, -cy);
+  }
+
   let strokeColor = element.strokeColor || 'black';
   let fillStyle = element.fillStyle || 'transparent';
 
@@ -296,6 +306,44 @@ export function renderElement(ctx, element) {
     ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
     ctx.moveTo(x2, y2);
     ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+    ctx.stroke();
+  }
+
+  if (state.appState.selectedElementIds && state.appState.selectedElementIds.includes(element.id)) {
+    const z = state.appState.zoom || 1;
+    ctx.strokeStyle = '#a5b4fc';
+    ctx.lineWidth = 1 / z;
+    ctx.setLineDash([5 / z, 5 / z]);
+    ctx.strokeRect(box.x - 2, box.y - 2, box.width + 4, box.height + 4);
+    ctx.setLineDash([]);
+    
+    const hs = 8 / z;
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = '#4c6ef5';
+    ctx.lineWidth = 1 / z;
+    
+    const drawHandle = (hx, hy) => {
+      ctx.fillRect(hx - hs/2, hy - hs/2, hs, hs);
+      ctx.strokeRect(hx - hs/2, hy - hs/2, hs, hs);
+    };
+    
+    drawHandle(box.x - 2, box.y - 2);
+    drawHandle(box.x + box.width/2, box.y - 2);
+    drawHandle(box.x + box.width + 2, box.y - 2);
+    drawHandle(box.x + box.width + 2, box.y + box.height/2);
+    drawHandle(box.x + box.width + 2, box.y + box.height + 2);
+    drawHandle(box.x + box.width/2, box.y + box.height + 2);
+    drawHandle(box.x - 2, box.y + box.height + 2);
+    drawHandle(box.x - 2, box.y + box.height/2);
+    
+    const rd = 20 / z;
+    ctx.beginPath();
+    ctx.moveTo(box.x + box.width/2, box.y - 2);
+    ctx.lineTo(box.x + box.width/2, box.y - 2 - rd);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(box.x + box.width/2, box.y - 2 - rd - hs/2, hs/2, 0, Math.PI * 2);
+    ctx.fill();
     ctx.stroke();
   }
 

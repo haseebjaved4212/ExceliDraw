@@ -1,4 +1,5 @@
 import { state } from './scene.js';
+import * as selectTool from '../tools/select.js';
 import * as rectangleTool from '../tools/rectangle.js';
 import * as ellipseTool from '../tools/ellipse.js';
 import * as diamondTool from '../tools/diamond.js';
@@ -9,6 +10,7 @@ import * as laserTool from '../tools/laser.js';
 import * as eraserTool from '../tools/eraser.js';
 
 const tools = {
+  select: selectTool,
   rectangle: rectangleTool,
   ellipse: ellipseTool,
   diamond: diamondTool,
