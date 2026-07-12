@@ -22,12 +22,26 @@
         </div>
 
         <div id="style-panel" class="panel">
-           <div class="style-row">
-             <label>Stroke: <input type="color" id="stroke-color-picker" value="#333333" /></label>
+           <div class="style-section">
+             <span class="style-title">Stroke</span>
+             <div class="color-swatches" id="stroke-swatches">
+                <button class="color-swatch active" style="background-color: #1e1e1e" data-color="#1e1e1e"></button>
+                <button class="color-swatch" style="background-color: #e03131" data-color="#e03131"></button>
+                <button class="color-swatch" style="background-color: #2b8a3e" data-color="#2b8a3e"></button>
+                <button class="color-swatch" style="background-color: #1971c2" data-color="#1971c2"></button>
+                <button class="color-swatch" style="background-color: #f08c00" data-color="#f08c00"></button>
+             </div>
            </div>
-           <div class="style-row">
-             <label>Fill: <input type="color" id="fill-color-picker" value="#ffffff" /></label>
-             <label><input type="checkbox" id="fill-transparent" checked /> Transparent</label>
+           <div class="style-section">
+             <span class="style-title">Background</span>
+             <div class="color-swatches" id="fill-swatches">
+                <button class="color-swatch active transparent-swatch" data-color="transparent"></button>
+                <button class="color-swatch" style="background-color: #ffc9c9" data-color="#ffc9c9"></button>
+                <button class="color-swatch" style="background-color: #b2f2bb" data-color="#b2f2bb"></button>
+                <button class="color-swatch" style="background-color: #a5d8ff" data-color="#a5d8ff"></button>
+                <button class="color-swatch" style="background-color: #ffec99" data-color="#ffec99"></button>
+                <button class="color-swatch" style="background-color: #e9ecef" data-color="#e9ecef"></button>
+             </div>
            </div>
         </div>
 

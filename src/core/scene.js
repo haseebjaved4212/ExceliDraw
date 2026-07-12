@@ -7,7 +7,7 @@ export const state = {
     scrollY: 0,
     activeTool: 'select',
     selectedElementIds: [],
-    currentColor: '#333333',
+    currentColor: '#1e1e1e',
     currentFill: 'transparent'
   }
 };

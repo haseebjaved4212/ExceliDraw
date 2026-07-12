@@ -1,24 +1,24 @@
 import { state, updateAppState } from '../core/scene.js';
 
 export function initStylePanel() {
-  const strokeColorPicker = document.getElementById('stroke-color-picker');
-  const fillColorPicker = document.getElementById('fill-color-picker');
-  const fillTransparent = document.getElementById('fill-transparent');
+  const strokeSwatches = document.querySelectorAll('#stroke-swatches .color-swatch');
+  const fillSwatches = document.querySelectorAll('#fill-swatches .color-swatch');
 
-  strokeColorPicker.addEventListener('input', (e) => {
-    updateAppState({ currentColor: e.target.value });
+  strokeSwatches.forEach(swatch => {
+    swatch.addEventListener('click', (e) => {
+      const color = e.currentTarget.getAttribute('data-color');
+      updateAppState({ currentColor: color });
+      strokeSwatches.forEach(s => s.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+    });
   });
 
-  fillColorPicker.addEventListener('input', (e) => {
-    fillTransparent.checked = false;
-    updateAppState({ currentFill: e.target.value });
-  });
-
-  fillTransparent.addEventListener('change', (e) => {
-    if (e.target.checked) {
-      updateAppState({ currentFill: 'transparent' });
-    } else {
-      updateAppState({ currentFill: fillColorPicker.value });
-    }
+  fillSwatches.forEach(swatch => {
+    swatch.addEventListener('click', (e) => {
+      const color = e.currentTarget.getAttribute('data-color');
+      updateAppState({ currentFill: color });
+      fillSwatches.forEach(s => s.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+    });
   });
 }
