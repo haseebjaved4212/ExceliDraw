@@ -16,6 +16,13 @@ A lightweight, high-performance, infinite canvas drawing application built entir
 - **Styling System:**
   - Live color picking for **Stroke** and **Background**.
   - Transparent backgrounds supported.
+- **Selection & Manipulation:**
+  - Robust hit-detection for all shapes (including precise point-to-segment math for lines and arrows).
+  - Move, scale, and freely rotate any element on the canvas.
+- **Eraser Tool:**
+  - Instantly delete shapes by dragging over them.
+- **Undo & Redo:**
+  - Comprehensive history stack mapping every state change.
 - **Dark Mode Support:**
   - Instantly toggle between Light and Dark themes. Black strokes automatically invert to remain visible on the dark background.
 - **Export & Import:**
@@ -23,14 +30,18 @@ A lightweight, high-performance, infinite canvas drawing application built entir
   -  **Import from JSON:** Load previous sketches effortlessly.
   -  **Export as PNG:** Export a cleanly cropped, high-quality PNG of your current drawing.
 - **Keyboard Shortcuts:**
+  - `V` or `1` for Select
   - `P` for Pen
+  - `E` for Eraser
   - `K` for Laser
   - `R` for Rectangle
-  - `E` for Ellipse
+  - `O` for Ellipse
   - `D` for Diamond
   - `A` for Arrow
   - `L` for Line
   - `Space` for Panning
+  - `Ctrl + Z` for Undo
+  - `Ctrl + Y` for Redo
 
 ##  Tech Stack
 
