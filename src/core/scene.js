@@ -1,5 +1,6 @@
 export const state = {
   elements: [],
+  laserTrails: [],
   appState: {
     zoom: 1,
     scrollX: 0,

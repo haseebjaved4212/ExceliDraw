@@ -5,6 +5,7 @@ import * as diamondTool from '../tools/diamond.js';
 import * as arrowTool from '../tools/arrow.js';
 import * as lineTool from '../tools/line.js';
 import * as penTool from '../tools/freedraw.js';
+import * as laserTool from '../tools/laser.js';
 
 const tools = {
   rectangle: rectangleTool,
@@ -12,7 +13,8 @@ const tools = {
   diamond: diamondTool,
   arrow: arrowTool,
   line: lineTool,
-  pen: penTool
+  pen: penTool,
+  laser: laserTool
 };
 
 export function handlePointerDown(e, canvasCoords) {

@@ -170,7 +170,56 @@ export function render() {
     renderElement(ctx, element);
   }
   
+  renderLaser(ctx);
+  
   ctx.restore();
+}
+
+let isLaserActive = false;
+
+function renderLaser(ctx) {
+  const now = Date.now();
+  const maxAge = 500;
+  
+  if (!state.laserTrails) state.laserTrails = [];
+  state.laserTrails = state.laserTrails.filter(pt => now - pt.timestamp < maxAge);
+  
+  if (state.laserTrails.length > 0) {
+    if (!isLaserActive) {
+      isLaserActive = true;
+      requestAnimationFrame(renderLoop);
+    }
+    
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 4;
+    ctx.shadowColor = 'red';
+    ctx.shadowBlur = 10;
+
+    for (let i = 1; i < state.laserTrails.length; i++) {
+      const p1 = state.laserTrails[i - 1];
+      const p2 = state.laserTrails[i];
+      if (p2.timestamp - p1.timestamp > 100) continue; // Gap
+      
+      const age = now - p2.timestamp;
+      const alpha = Math.max(0, 1 - (age / maxAge));
+      
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.strokeStyle = `rgba(255, 0, 0, ${alpha})`;
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+  } else {
+    isLaserActive = false;
+  }
+}
+
+function renderLoop() {
+  if (isLaserActive) {
+    render();
+  }
 }
 
 export function renderElement(ctx, element) {

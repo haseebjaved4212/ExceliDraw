@@ -27,6 +27,7 @@ export function initToolbar() {
       case 'd': tool = 'diamond'; break;
       case 'a': tool = 'arrow'; break;
       case 'l': tool = 'line'; break;
+      case 'k': tool = 'laser'; break;
       case 'p': tool = 'pen'; break;
       case 'e': tool = 'eraser'; break;
     }
