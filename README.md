@@ -71,9 +71,13 @@ Open `http://localhost:5173/` in your browser.
 - `src/ui/`: Handles the DOM UI components (toolbar, color pickers, theme toggle).
 - `src/features/`: Complex sub-features like Exporting and Importing data.
 
-##  Roadmap (Upcoming Features)
 
-- [ ] **Selection Tool:** Move, resize, and rotate existing elements.
-- [ ] **Eraser Tool:** Easily delete shapes by drawing over them.
-- [ ] **Undo / Redo:** Complete history stack.
-- [ ] **Snapping:** Align shapes cleanly.
+## Licence 
+- MIT License
+
+--- 
+
+<h3 align="center">
+    <img src="https://readme-typing-svg.herokuapp.com?key=1&width=400&height=40&lines=Made+with+%E2%9D%A4%EF%B8%8F+by+Haseeb+Javed" alt="Typing SVG" />
+</h3>
+
