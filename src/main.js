@@ -13,16 +13,3 @@ initToolbar();
 initStylePanel();
 initExport();
 initImport();
-
-// Add a test rectangle to verify coordinate system and rendering
-addElement({
-  id: 'rect-1',
-  type: 'rectangle',
-  x: 100,
-  y: 100,
-  width: 200,
-  height: 150,
-  fillStyle: 'transparent',
-  strokeColor: '#333',
-  strokeWidth: 2
-});
