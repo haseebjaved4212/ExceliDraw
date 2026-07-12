@@ -30,6 +30,19 @@ export function rotatePoint(x, y, cx, cy, angle) {
   return { x: nx, y: ny };
 }
 
+function sqr(x) { return x * x; }
+function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y); }
+function distToSegmentSquared(p, v, w) {
+  let l2 = dist2(v, w);
+  if (l2 === 0) return dist2(p, v);
+  let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+  t = Math.max(0, Math.min(1, t));
+  return dist2(p, { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) });
+}
+function distToSegment(px, py, vx, vy, wx, wy) { 
+  return Math.sqrt(distToSegmentSquared({x: px, y: py}, {x: vx, y: vy}, {x: wx, y: wy})); 
+}
+
 export function isPointInElement(px, py, element) {
   const box = getBoundingBox(element);
   const cx = box.x + box.width / 2;
@@ -37,6 +50,10 @@ export function isPointInElement(px, py, element) {
   
   const angle = element.angle || 0;
   const unrotated = rotatePoint(px, py, cx, cy, -angle);
+  
+  if (element.type === 'line' || element.type === 'arrow') {
+    return distToSegment(unrotated.x, unrotated.y, element.x, element.y, element.x + element.width, element.y + element.height) < 10;
+  }
   
   const pad = 10;
   return unrotated.x >= box.x - pad &&

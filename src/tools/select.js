@@ -75,8 +75,37 @@ export function onPointerDown(e, canvasCoords) {
   mode = 'none';
 }
 
+function updateCursor(e, canvasCoords) {
+  for (const id of state.appState.selectedElementIds) {
+    const el = state.elements.find(e => e.id === id);
+    if (!el) continue;
+    const handle = getHandleAt(canvasCoords.x, canvasCoords.y, el);
+    if (handle) {
+      if (handle === 'rotate') e.target.style.cursor = 'grab';
+      else if (handle === 'nw' || handle === 'se') e.target.style.cursor = 'nwse-resize';
+      else if (handle === 'ne' || handle === 'sw') e.target.style.cursor = 'nesw-resize';
+      else if (handle === 'n' || handle === 's') e.target.style.cursor = 'ns-resize';
+      else if (handle === 'e' || handle === 'w') e.target.style.cursor = 'ew-resize';
+      return;
+    }
+  }
+
+  for (let i = state.elements.length - 1; i >= 0; i--) {
+    const el = state.elements[i];
+    if (isPointInElement(canvasCoords.x, canvasCoords.y, el)) {
+      e.target.style.cursor = 'move';
+      return;
+    }
+  }
+
+  e.target.style.cursor = 'default';
+}
+
 export function onPointerMove(e, canvasCoords) {
-  if (mode === 'none') return;
+  if (mode === 'none') {
+    updateCursor(e, canvasCoords);
+    return;
+  }
 
   const dx = canvasCoords.x - startCoords.x;
   const dy = canvasCoords.y - startCoords.y;
@@ -147,6 +176,9 @@ export function onPointerMove(e, canvasCoords) {
 export function onPointerUp(e, canvasCoords) {
   if (mode !== 'none' && mode !== 'marquee') {
     commitToHistory();
+    if (mode === 'rotate') {
+      e.target.style.cursor = 'grab';
+    }
   }
   mode = 'none';
   targetId = null;
