@@ -220,6 +220,7 @@ function renderLaser(ctx) {
 function renderLoop() {
   if (isLaserActive) {
     render();
+    requestAnimationFrame(renderLoop);
   }
 }
 
