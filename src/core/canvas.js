@@ -283,12 +283,24 @@ export function renderElement(ctx, element) {
   } else if (element.type === 'line' || element.type === 'arrow') {
     ctx.moveTo(element.x, element.y);
     ctx.lineTo(element.x + element.width, element.y + element.height);
+  } else if (element.type === 'text') {
+    ctx.font = element.font;
+    ctx.fillStyle = strokeColor;
+    ctx.textBaseline = 'top';
+    const lines = element.text.split('\n');
+    let y = element.y;
+    for (const line of lines) {
+      ctx.fillText(line, element.x, y);
+      y += element.lineHeight || 24;
+    }
   }
 
   if (element.fillStyle !== 'transparent' && ['rectangle', 'ellipse', 'diamond'].includes(element.type)) {
     ctx.fill();
   }
-  ctx.stroke();
+  if (element.type !== 'text') {
+    ctx.stroke();
+  }
 
   // Draw arrowhead if arrow
   if (element.type === 'arrow') {

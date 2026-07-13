@@ -8,6 +8,7 @@ import * as lineTool from '../tools/line.js';
 import * as penTool from '../tools/freedraw.js';
 import * as laserTool from '../tools/laser.js';
 import * as eraserTool from '../tools/eraser.js';
+import * as textTool from '../tools/text.js';
 
 const tools = {
   select: selectTool,
@@ -18,7 +19,8 @@ const tools = {
   line: lineTool,
   pen: penTool,
   laser: laserTool,
-  eraser: eraserTool
+  eraser: eraserTool,
+  text: textTool
 };
 
 export function handlePointerDown(e, canvasCoords) {
