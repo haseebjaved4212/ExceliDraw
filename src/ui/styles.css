@@ -201,3 +201,70 @@ canvas {
 #actions-panel button:hover {
   background: var(--hover-bg);
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #toolbar {
+    top: auto;
+    bottom: 16px;
+    max-width: calc(100% - 32px);
+    overflow-x: auto;
+    justify-content: flex-start;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  #toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  #style-panel {
+    top: auto;
+    bottom: 76px; /* Position above the toolbar */
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    max-width: calc(100% - 32px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 8px 12px;
+  }
+  
+  #style-panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .style-section {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
+    margin-right: 24px;
+    min-width: max-content;
+  }
+  
+  .style-section:last-child {
+    margin-right: 0;
+  }
+
+  .style-title {
+    margin-right: 8px;
+    margin-bottom: 0;
+  }
+
+  #actions-panel {
+    top: 16px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: calc(100% - 32px);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  #actions-panel button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+
