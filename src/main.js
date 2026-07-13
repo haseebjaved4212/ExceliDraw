@@ -5,6 +5,7 @@ import { initToolbar } from './ui/toolbar.js';
 import { initStylePanel } from './ui/stylePanel.js';
 import { initExport } from './features/export.js';
 import { initImport } from './features/import.js';
+import { initShare, loadFromHash } from './features/share.js';
 import { undo, redo, commitToHistory } from './core/history.js';
 import { initTheme } from './ui/theme.js';
 
@@ -15,9 +16,16 @@ initToolbar();
 initStylePanel();
 initExport();
 initImport();
+initShare();
+
+// Load from hash if present
+loadFromHash();
 
 // Initialize history
-commitToHistory();
+if (!window.location.hash || !window.location.hash.startsWith('#state=')) {
+  commitToHistory();
+}
+
 document.getElementById('btn-undo').addEventListener('click', undo);
 document.getElementById('btn-redo').addEventListener('click', redo);
 
