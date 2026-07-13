@@ -11,8 +11,11 @@ A lightweight, high-performance, infinite canvas drawing application built entir
   -  Diamond
   -  Arrow
   -  Line
+  -  Text (add typography directly onto the canvas)
   -  Pen (with pressure sensitivity via `perfect-freehand`)
   -  Laser Pointer (with a beautifully animated, fading glowing trail)
+- **Mobile Responsive:**
+  - Designed to work seamlessly across desktops, tablets, and mobile devices with touch-friendly bottom toolbars.
 - **Styling System:**
   - Live color picking for **Stroke** and **Background**.
   - Transparent backgrounds supported.
@@ -25,13 +28,15 @@ A lightweight, high-performance, infinite canvas drawing application built entir
   - Comprehensive history stack mapping every state change.
 - **Dark Mode Support:**
   - Instantly toggle between Light and Dark themes. Black strokes automatically invert to remain visible on the dark background.
-- **Export & Import:**
+- **Export, Import & Share:**
   -  **Export as JSON:** Save your entire canvas state to a file.
   -  **Import from JSON:** Load previous sketches effortlessly.
   -  **Export as PNG:** Export a cleanly cropped, high-quality PNG of your current drawing.
+  -  **Share Link:** Instantly generate a shareable URL containing your exact drawing state to share with others without needing a backend server!
 - **Keyboard Shortcuts:**
   - `V` or `1` for Select
   - `P` for Pen
+  - `T` for Text
   - `E` for Eraser
   - `K` for Laser
   - `R` for Rectangle
